@@ -1,0 +1,8 @@
+body {
+    margin: 0 1em;
+    min-width: 20em;
+}
+
+.table-stuff td {
+    vertical-align: middle !important;
+}

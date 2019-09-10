@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="fragments/header :: head(pageTitle='Stuff')">
+    </head>
+    <body>
+        <div th:replace="fragments/header :: header"></div>
+        <h1>Stuff</h1>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover table-stuff">
+                <thead>
+                    <tr>
+                        <th>Edit</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Size</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="stuff : ${listOfStuff}">
+                        <td>
+                            <a class="btn btn-default btn-sm" th:href="${'/edit?id=' + stuff.id}"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+                        </td>
+                        <td th:text="${stuff.name}"></td>
+                        <td th:text="${stuff.description}"></td>
+                        <td th:text="${stuff.size}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <a class="btn btn-default" href="/create"><span class="glyphicon glyphicon-plus"></span> Create</a>
+        <a class="btn btn-default" href="/stuff"><span class="glyphicon glyphicon-refresh"></span> Refresh</a>
+    </body>
+</html>

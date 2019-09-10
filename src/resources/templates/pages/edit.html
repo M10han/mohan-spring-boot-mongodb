@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="fragments/header :: head(pageTitle='Edit')">
+    </head>
+    <body>
+        <div th:replace="fragments/header :: header"></div>
+        <h1 th:if="${isCreate}">Create</h1>
+        <h1 th:if="${!isCreate}">Edit</h1>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h2>Stuff</h2>
+            </div>
+            <div class="panel-body">
+                <form th:with="submitUrl='/submit-'+${isCreate?'create':'edit'}" th:action="${submitUrl}" th:object="${stuff}" method="post" role="form">
+                    <input th:if="${!isCreate}" type="hidden" th:field="*{id}" />
+                    <div class="form-group" th:classappend="${#fields.hasErrors('name')}? 'has-error'">
+                        <label class="control-label" th:for="name" th:text="|Name:|"></label>
+                        <input type="text" th:field="*{name}" class="form-control"/>
+                        <span th:if="${#fields.hasErrors('name')}" class="text-danger small"><strong>* Name must be between 4 and 32 characters.</strong></span>
+                    </div>
+                    <div class="form-group" th:classappend="${#fields.hasErrors('description')}? 'has-error'">
+                        <label class="control-label" th:for="description" th:text="|Description:|"></label>
+                        <textarea class="form-control" th:field="*{description}"/>
+                        <span th:if="${#fields.hasErrors('description')}" class="text-danger small"><strong>* Description should be a valid string up to 124 characters long.</strong></span>
+                    </div>
+                    <div class="form-group" th:classappend="${#fields.hasErrors('size')}? 'has-error'">
+                        <label class="control-label" th:for="size" th:text="|Size:|"></label>
+                        <select th:field="*{size}" class="form-control">
+                            <option th:each="possibleSize : ${listOfSizes}" th:value="${possibleSize}" th:selected="${#lists.contains(stuff.size, possibleSize)}" th:text="${possibleSize}"></option>
+                        </select>
+                        <span th:if="${#fields.hasErrors('size')}" class="text-danger small"><strong>* Size should be selected.</strong></span>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <a class="btn btn-default" href="/stuff">Cancel</a>
+                        <button th:if="${!isCreate}" type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="myModal" class="modal fade" role="dialog" th:if="${!isCreate}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"><strong>Delete stuff</strong></h4>
+                    </div>
+                    <div class="modal-body">
+                        <form th:action="@{/submit-delete}" method="post" role="form">
+                            <p>Are you sure you want to delete stuff '<strong><span th:text="${stuff.name}"></span></strong>'?</p>
+                            <div class="form-group">
+                                <input type="hidden" name="id" class="form-control" th:value="${stuff.id}"/>
+                            </div>
+                            <div class="btn-group" role="group">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                                <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
